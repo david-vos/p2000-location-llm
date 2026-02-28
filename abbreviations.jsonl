@@ -1,0 +1,41 @@
+{"input":"ZOETMR","output":"Zoetermeer"}
+{"input":"ALPHRN","output":"Alphen aan den Rijn"}
+{"input":"BERKRR","output":"Berkel & Rodenrijs"}
+{"input":"BLEISW","output":"Bleiswijk"}
+{"input":"DELIER","output":"De Lier"}
+{"input":"DELFT","output":"Delft"}
+{"input":"DELFGW","output":"Delfgauw"}
+{"input":"DENHZH","output":"Den Hoorn"}
+{"input":"SGRAVH","output":"Den Haag"}
+{"input":"SGRAVZ","output":"'s-Gravenzande"}
+{"input":"HAZDRP","output":"Hazerswoude Dorp"}
+{"input":"HOEKVH","output":"Hoek van Holland"}
+{"input":"HONSDK","output":"Honselersdijk"}
+{"input":"KWINTH","output":"Kwintsheul"}
+{"input":"LEIDDM","output":"Leidschendam"}
+{"input":"MAASDK","output":"Maasdijk"}
+{"input":"MONSTR","output":"Monster"}
+{"input":"NAALDW","output":"Naaldwijk"}
+{"input":"PIJNAK","output":"Pijnacker"}
+{"input":"NOOTDP","output":"Nootdorp"}
+{"input":"POELDK","output":"Poeldijk"}
+{"input":"RIJSZH","output":"Rijswijk"}
+{"input":"SCHILD","output":"Schipluiden"}
+{"input":"TRHEIE","output":"Ter Heide"}
+{"input":"VOORB","output":"Voorburg"}
+{"input":"WATERI","output":"Wateringen"}
+{"input":"WADDXV","output":"Waddinxveen"}
+{"input":"WASSNR","output":"Wassenaar"}
+{"input":"PIERSH","output":"Piershil"}
+{"input":"OTTOLD","output":"Ottoland"}
+{"input":"VLAARD","output":"Vlaardingen"}
+{"input":"NDWKZH","output":"Noordwijk Aan Zee"}
+{"input":"KATWZH","output":"Katwijk Aan Zee"}
+{"input":"LEIDEN","output":"Leiden"}
+{"input":"SCHOHV","output":"Schoonhoven"}
+{"input":"GE","output":"Gelderland"}
+{"input":"ZOETWD","output":"Zoeterwoude"}
+{"input":"OEGSTG","output":"Oegstgeest"}
+{"input":"LEIDDP","output":"Leiderdorp"}
+{"input":"ROTTDM","output":"Rotterdam"}
+{"input":"CORTLD","output":"Coördinatiecentrum Rotterdam-Land"}

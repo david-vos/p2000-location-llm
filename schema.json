@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "Straatnaam": {
+      "type": ["string", "null"]
+    },
+    "PlaatsNaam": {
+      "type": ["string", "null"]
+    },
+    "wegnummer": {
+      "type": ["string", "null"]
+    },
+    "postcode": {
+      "type": ["string", "null"]
+    },
+    "Regio": {
+      "type": ["string", "null"]
+    }
+  },
+  "required": ["Straatnaam", "PlaatsNaam", "wegnummer", "postcode", "Regio"],
+  "additionalProperties": false
+}

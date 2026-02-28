@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Model outputs (large files)
+p2000-model/
+p2000-model-hf/
+p2000-model-merged/
+p2000-model-mlx/
+p2000-model-mlx-fused/
+p2000-gguf/
+
+# Generated training data
+train_chat.jsonl
+mlx-data/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea
+.claude
+.vscode
+.vsc

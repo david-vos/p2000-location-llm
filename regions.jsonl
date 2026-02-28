@@ -1,0 +1,32 @@
+{"input":"Amsterdam-Amstelland","output":"Amsterdam-Amstelland"}
+{"input":"Brabant Noord","output":"Brabant Noord"}
+{"input":"Brabant Zuid-Oost","output":"Brabant Zuid-Oost"}
+{"input":"Brabant-Noord","output":"Brabant Noord"}
+{"input":"Brabant-Zuidoost","output":"Brabant Zuid-Oost"}
+{"input":"Drenthe","output":"Drenthe"}
+{"input":"Flevoland","output":"Flevoland"}
+{"input":"Friesland","output":"Friesland"}
+{"input":"Gelderland Midden","output":"Gelderland Midden"}
+{"input":"Gelderland Zuid","output":"Gelderland Zuid"}
+{"input":"Gooi en Vechtstreek","output":"Gooi en Vechtstreek"}
+{"input":"Groningen","output":"Groningen"}
+{"input":"Haaglanden","output":"Haaglanden"}
+{"input":"Hollands Midden","output":"Hollands Midden"}
+{"input":"Hollands-Midden","output":"Hollands Midden"}
+{"input":"IJsselland","output":"IJsselland"}
+{"input":"Kennemerland","output":"Kennemerland"}
+{"input":"Landelijk","output":"Landelijk"}
+{"input":"Limburg Noord","output":"Limburg Noord"}
+{"input":"Limburg Zuid","output":"Limburg Zuid"}
+{"input":"Limburg-Noord","output":"Limburg Noord"}
+{"input":"Midden- en West-Brabant","output":"Midden- en West-Brabant"}
+{"input":"Noord- en Oost-Gelderland","output":"Noord- en Oost-Gelderland"}
+{"input":"Noord-Holland Noord","output":"Noord-Holland Noord"}
+{"input":"Renswoude","output":"Renswoude"}
+{"input":"Rotterdam-Rijnmond","output":"Rotterdam-Rijnmond"}
+{"input":"Twente","output":"Twente"}
+{"input":"Utrecht","output":"Utrecht"}
+{"input":"Zaanstreek-Waterland","output":"Zaanstreek-Waterland"}
+{"input":"Zeeland","output":"Zeeland"}
+{"input":"Zuid-Holland Zuid","output":"Zuid-Holland Zuid"}
+{"input":"Zuid-Holland-Zuid","output":"Zuid-Holland Zuid"}
