@@ -10,17 +10,8 @@ venv/
 .venv/
 env/
 
-# Model outputs (large files)
-p2000-model/
-p2000-model-hf/
-p2000-model-merged/
-p2000-model-mlx/
-p2000-model-mlx-fused/
-p2000-gguf/
-
-# Generated training data
-train_chat.jsonl
-mlx-data/
+# Build outputs (models, training data, GGUF)
+build/
 
 # OS
 .DS_Store

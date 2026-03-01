@@ -14,7 +14,7 @@ from transformers import (
 from trl import SFTTrainer
 
 MODEL_NAME = "TinyLlama/TinyLlama-1.1B-intermediate-step-1431k-3T"
-OUTPUT_DIR = "./p2000-model"
+OUTPUT_DIR = "./build/p2000-model"
 EPOCHS = 10
 BATCH_SIZE = 4
 LEARNING_RATE = 2e-4
@@ -72,7 +72,7 @@ def main():
         model = model.to("mps")
 
     # Load dataset
-    dataset = load_dataset("json", data_files="train_chat.jsonl", split="train")
+    dataset = load_dataset("json", data_files="build/train_chat.jsonl", split="train")
 
     def format_messages_as_text(messages):
         parts = []
@@ -132,7 +132,7 @@ def main():
     tokenizer.save_pretrained(OUTPUT_DIR)
 
     # Also merge and save full model for easier inference
-    merged_dir = f"{OUTPUT_DIR}-merged"
+    merged_dir = "./build/p2000-model-merged"
     print(f"Merging LoRA weights and saving to {merged_dir}...")
     merged_model = model.merge_and_unload()
     merged_model.save_pretrained(merged_dir)

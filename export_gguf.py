@@ -7,10 +7,10 @@ import sys
 import shutil
 
 MODEL_NAME = "Qwen/Qwen2.5-1.5B-Instruct"
-LORA_DIR = "./p2000-model"
-MLX_FUSED_DIR = "./p2000-model-mlx-fused"
-MERGED_DIR = "./p2000-model-merged"
-GGUF_DIR = "./p2000-gguf"
+LORA_DIR = "./build/p2000-model"
+MLX_FUSED_DIR = "./build/p2000-model-mlx-fused"
+MERGED_DIR = "./build/p2000-model-merged"
+GGUF_DIR = "./build/p2000-gguf"
 GGUF_FILE = os.path.join(GGUF_DIR, "p2000-model.gguf")
 QUANTIZATION = "q8_0"
 

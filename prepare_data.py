@@ -2,6 +2,7 @@
 """Convert train.jsonl + abbreviations/regions into chat-format training data."""
 
 import json
+import os
 
 def load_jsonl(path):
     entries = []
@@ -51,11 +52,12 @@ def main():
         }
         output.append(chat)
 
-    with open("train_chat.jsonl", "w") as f:
+    os.makedirs("build", exist_ok=True)
+    with open("build/train_chat.jsonl", "w") as f:
         for item in output:
             f.write(json.dumps(item, ensure_ascii=False) + "\n")
 
-    print(f"Created train_chat.jsonl with {len(output)} examples")
+    print(f"Created build/train_chat.jsonl with {len(output)} examples")
 
 if __name__ == "__main__":
     main()

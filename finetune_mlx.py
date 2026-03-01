@@ -7,7 +7,7 @@ import sys
 import os
 
 MODEL_NAME = "TinyLlama/TinyLlama-1.1B-intermediate-step-1431k-3T"
-OUTPUT_DIR = "./p2000-model-mlx"
+OUTPUT_DIR = "./build/p2000-model-mlx"
 EPOCHS = 10
 BATCH_SIZE = 1
 LEARNING_RATE = 2e-4
@@ -37,9 +37,9 @@ def format_messages_as_text(messages):
 
 def prepare_mlx_data():
     """Convert train_chat.jsonl to MLX-compatible format (train/valid split)."""
-    os.makedirs("mlx-data", exist_ok=True)
+    os.makedirs("build/mlx-data", exist_ok=True)
 
-    with open("train_chat.jsonl") as f:
+    with open("build/train_chat.jsonl") as f:
         examples = [json.loads(line) for line in f if line.strip()]
 
     # Convert chat messages to plain text completions
@@ -58,7 +58,7 @@ def prepare_mlx_data():
         valid = [train[-1]]
 
     for name, data in [("train.jsonl", train), ("valid.jsonl", valid)]:
-        with open(f"mlx-data/{name}", "w") as f:
+        with open(f"build/mlx-data/{name}", "w") as f:
             for item in data:
                 f.write(json.dumps(item, ensure_ascii=False) + "\n")
 
@@ -73,7 +73,7 @@ def main():
     model_name = args.model
     check_deps()
 
-    if not os.path.exists("train_chat.jsonl"):
+    if not os.path.exists("build/train_chat.jsonl"):
         print("Run prepare_data.py first!")
         sys.exit(1)
 
@@ -82,7 +82,7 @@ def main():
     cmd = [
         sys.executable, "-m", "mlx_lm", "lora",
         "--model", model_name,
-        "--data", "./mlx-data",
+        "--data", "./build/mlx-data",
         "--train",
         "--batch-size", str(BATCH_SIZE),
         "--num-layers", str(LORA_RANK),
@@ -97,7 +97,7 @@ def main():
     subprocess.check_call(cmd)
 
     # Fuse adapter into model
-    fused_dir = f"{OUTPUT_DIR}-fused"
+    fused_dir = "./build/p2000-model-mlx-fused"
     print(f"Fusing adapter weights into {fused_dir}...")
     subprocess.check_call([
         sys.executable, "-m", "mlx_lm", "fuse",

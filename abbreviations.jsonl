@@ -39,3 +39,29 @@
 {"input":"LEIDDP","output":"Leiderdorp"}
 {"input":"ROTTDM","output":"Rotterdam"}
 {"input":"CORTLD","output":"Coördinatiecentrum Rotterdam-Land"}
+{"input":"VOORSC","output":"Voorschoten"}
+{"input":"BODEGR","output":"Bodegraven"}
+{"input":"AMMSTL","output":"Ammerstol"}
+{"input":"BOSKP","output":"Boskoop"}
+{"input":"CAPIJS","output":"Capelle aan den IJssel"}
+{"input":"BERGHK","output":"Bergschenhoek"}
+{"input":"HOOGVL","output":"Hoogvliet"}
+{"input":"POORTG","output":"Poortugaal"}
+{"input":"MAASSL","output":"Maassluis"}
+{"input":"GOUDA","output":"Gouda"}
+{"input":"STOLWK","output":"Stolwijk"}
+{"input":"NDEN","output":"Noorden"}
+{"input":"ODKIJS","output":"Ouderkerk aan den IJssel"}
+{"input": "SCHIDM", "output": "Schiedam"}
+{"input": "DORDRT", "output": "Dordrecht"}
+{"input": "SPIJKN", "output": "Spijkenisse"}
+{"input": "BARDRT", "output": "Barendrecht"}
+{"input": "ZWIJND", "output": "Zwijndrecht"}
+{"input": "GORCHM", "output": "Gorinchem"}
+{"input": "NWLEKK", "output": "Nieuw-Lekkerland"}
+{"input": "KLAASW", "output": "Klaaswaal"}
+{"input": "OUDDRP", "output": "Ouddorp"}
+{"input": "BERGAB", "output": "Bergambacht"}
+{"input": "HILLGM", "output": "Hillegom"}
+{"input": "ROELVN", "output": "Roelofarendsveen"}
+{"input": "NWWETR", "output": "Nieuw-Vennep"}
