@@ -5,7 +5,7 @@ import json
 import subprocess
 import sys
 
-MODEL = "p2000"
+MODELS = ["p2000v2"]
 
 TESTS = [
     {
@@ -22,7 +22,7 @@ TESTS = [
     },
     {
         "input": "P 2 BON-04 Buitenbrand Maasdijk A20 Li 34,2 Rotterdam 073421",
-        "expected": {"Straatnaam": "Maasdijk", "PlaatsNaam": "Rotterdam", "wegnummer": "A20", "postcode": None, "Regio": None},
+        "expected": {"Straatnaam": "Maasdijk", "PlaatsNaam": "Rotterdam", "wegnummer": "A20", "postcode": None, "Regio": "Rotterdam-Rijnmond"},
     },
     {
         "input": "Best Rit: 27887",
@@ -34,7 +34,7 @@ TESTS = [
     },
     {
         "input": "A1 AMBU 17102 Westeinde 2512GR Den Haag SGRAVH bon 32110",
-        "expected": {"Straatnaam": "Westeinde", "PlaatsNaam": "Den Haag", "wegnummer": None, "postcode": "2512GR", "Regio": "'s-Gravenhage"},
+        "expected": {"Straatnaam": "Westeinde", "PlaatsNaam": "Den Haag", "wegnummer": None, "postcode": "2512GR", "Regio": "Haaglanden"},
     },
     {
         "input": "Ongeval wegvervoer letsel N279 Re Veghel",
@@ -48,14 +48,58 @@ TESTS = [
         "input": "BMD-01 Ass. Politie (OVD-B) (Team Digitale Verkenning) Uilenboslaan Vleuten 099189",
         "expected": {"Straatnaam": "Uilenboslaan", "PlaatsNaam": "Vleuten", "wegnummer": None, "postcode": None, "Regio": None},
     },
+    {
+        "input": "12148 Rit 33527 Houtmarkt Haarlem",
+        "expected": {"Straatnaam": "Houtmarkt", "PlaatsNaam": "Haarlem", "wegnummer": None, "postcode": None, "Regio": None},
+    },
+    {
+        "input": "Eindhoven Rit: 27989",
+        "expected": {"Straatnaam": None, "PlaatsNaam": "Eindhoven", "wegnummer": None, "postcode": None, "Regio": None},
+    },
+    {
+        "input": "Ambu 07123 VWS Arnhem Rit 68845",
+        "expected": {"Straatnaam": None, "PlaatsNaam": "Arnhem", "wegnummer": None, "postcode": None, "Regio": None},
+    },
+    {
+        "input": "Graag posten Brugwachter.",
+        "expected": {"Straatnaam": None, "PlaatsNaam": None, "wegnummer": None, "postcode": None, "Regio": None},
+    },
+    {
+        "input": "10111 Rit 33526 VWS Wognum Nieuweweg Wognum",
+        "expected": {"Straatnaam": "Nieuweweg", "PlaatsNaam": "Wognum", "wegnummer": None, "postcode": None, "Regio": None},
+    },
+    {
+        "input": "AMBU 17104 Boorn 3068LA Rotterdam ROTTDM bon 34589",
+        "expected": {"Straatnaam": "Boorn", "PlaatsNaam": "Rotterdam", "wegnummer": None, "postcode": "3068LA", "Regio": "Rotterdam-Rijnmond"},
+    },
+    {
+        "input": "BRT-01 Wateroverlast (flat) Winston Churchilllaan Spijkenisse 179237",
+        "expected": {"Straatnaam": "Winston Churchilllaan", "PlaatsNaam": "Spijkenisse", "wegnummer": None, "postcode": None, "Regio": None},
+    },
+    {
+        "input": "BON-02 Ongeval wegvervoer Noordelijke Esweg Weijinksweg Hengelo 059096 059333",
+        "expected": {"Straatnaam": "Noordelijke Esweg", "PlaatsNaam": "Hengelo", "wegnummer": None, "postcode": None, "Regio": None},
+    },
+    {
+        "input": "Aanrijding letsel Noordelijke Esweg Weijinksweg Hengelo 156507",
+        "expected": {"Straatnaam": "Noordelijke Esweg", "PlaatsNaam": "Hengelo", "wegnummer": None, "postcode": None, "Regio": None},
+    },
+    {
+        "input": "Obrechtlaan SGRAVZ : 15123",
+        "expected": {"Straatnaam": "Obrechtlaan", "PlaatsNaam": "Den Haag", "wegnummer": None, "postcode": None, "Regio": "Haaglanden"},
+    },
+    {
+        "input": "Lelystad 37162",
+        "expected": {"Straatnaam": None, "PlaatsNaam": "Lelystad", "wegnummer": None, "postcode": None, "Regio": None},
+    },
 ]
 
 FIELDS = ["Straatnaam", "PlaatsNaam", "wegnummer", "postcode", "Regio"]
 
 
-def query_ollama(message: str) -> dict:
+def query_ollama(model: str, message: str) -> dict:
     result = subprocess.run(
-        ["ollama", "run", MODEL, message],
+        ["ollama", "run", model, message],
         capture_output=True, text=True, timeout=30,
     )
     raw = result.stdout.strip()
@@ -65,9 +109,14 @@ def query_ollama(message: str) -> dict:
         return {"_raw": raw, "_error": "invalid JSON"}
 
 
-def main():
+def run_tests_for_model(model: str) -> int:
+    """Run all tests for a single model, return number passed."""
     passed = 0
     failed = 0
+
+    print(f"\n{'#'*50}")
+    print(f"# Model: {model}")
+    print(f"{'#'*50}")
 
     for i, test in enumerate(TESTS, 1):
         inp = test["input"]
@@ -75,7 +124,7 @@ def main():
         print(f"\n--- Test {i}/{len(TESTS)} ---")
         print(f"Input:    {inp}")
 
-        actual = query_ollama(inp)
+        actual = query_ollama(model, inp)
 
         if "_error" in actual:
             print(f"ERROR:    {actual['_raw']}")
@@ -98,9 +147,27 @@ def main():
             print(f"Actual:   {json.dumps(actual)}")
             failed += 1
 
-    print(f"\n{'='*40}")
-    print(f"Results: {passed}/{len(TESTS)} passed, {failed} failed")
-    return 0 if failed == 0 else 1
+    print(f"\n{model}: {passed}/{len(TESTS)} passed, {failed} failed")
+    return passed
+
+
+def main():
+    results = {}
+    for model in MODELS:
+        results[model] = run_tests_for_model(model)
+
+    print(f"\n{'='*50}")
+    print(f"FINAL REPORT")
+    print(f"{'='*50}")
+    for model, passed in sorted(results.items(), key=lambda x: x[1], reverse=True):
+        pct = passed / len(TESTS) * 100
+        print(f"  {model:<20} {passed}/{len(TESTS)} ({pct:.0f}%)")
+
+    best = max(results, key=results.get)
+    if len(MODELS) > 1:
+        print(f"\nBest model: {best} ({results[best]}/{len(TESTS)})")
+
+    return 0 if all(p == len(TESTS) for p in results.values()) else 1
 
 
 if __name__ == "__main__":

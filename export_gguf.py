@@ -124,6 +124,7 @@ PARAMETER top_p 0.9
 PARAMETER stop "<|im_end|>"
 PARAMETER stop "<|endoftext|>"
 PARAMETER num_predict 200
+PARAMETER num_ctx 3000
 """
 
     modelfile_path = os.path.join(GGUF_DIR, "Modelfile")

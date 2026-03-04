@@ -9,7 +9,7 @@ import os
 MODEL_NAME = "TinyLlama/TinyLlama-1.1B-intermediate-step-1431k-3T"
 OUTPUT_DIR = "./build/p2000-model-mlx"
 EPOCHS = 10
-BATCH_SIZE = 1
+BATCH_SIZE = 4
 LEARNING_RATE = 2e-4
 LORA_RANK = 8
 
@@ -90,6 +90,7 @@ def main():
         "--learning-rate", str(LEARNING_RATE),
         "--adapter-path", OUTPUT_DIR,
         "--grad-checkpoint",
+        "--max-seq-length", "3000",
     ]
 
     print(f"Fine-tuning {model_name} with MLX...")

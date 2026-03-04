@@ -1,6 +1,6 @@
 {"input":"ZOETMR","output":"Zoetermeer"}
 {"input":"ALPHRN","output":"Alphen aan den Rijn"}
-{"input":"BERKRR","output":"Berkel & Rodenrijs"}
+{"input":"BERKRR","output":"Berkel en Rodenrijs"}
 {"input":"BLEISW","output":"Bleiswijk"}
 {"input":"DELIER","output":"De Lier"}
 {"input":"DELFT","output":"Delft"}
@@ -29,8 +29,8 @@
 {"input":"PIERSH","output":"Piershil"}
 {"input":"OTTOLD","output":"Ottoland"}
 {"input":"VLAARD","output":"Vlaardingen"}
-{"input":"NDWKZH","output":"Noordwijk Aan Zee"}
-{"input":"KATWZH","output":"Katwijk Aan Zee"}
+{"input":"NDWKZH","output":"Noordwijk aan Zee"}
+{"input":"KATWZH","output":"Katwijk aan Zee"}
 {"input":"LEIDEN","output":"Leiden"}
 {"input":"SCHOHV","output":"Schoonhoven"}
 {"input":"GE","output":"Gelderland"}
@@ -65,3 +65,75 @@
 {"input": "HILLGM", "output": "Hillegom"}
 {"input": "ROELVN", "output": "Roelofarendsveen"}
 {"input": "NWWETR", "output": "Nieuw-Vennep"}
+{"input": "BLESGF", "output": "Bleskensgraaf"}
+{"input": "BRIELL", "output": "Brielle"}
+{"input": "DIRKLD", "output": "Dirksland"}
+{"input": "GOUDRK", "output": "Gouda"}
+{"input": "HELLVS", "output": "Hellevoetsluis"}
+{"input": "HENDIA", "output": "Hendrik-Ido-Ambacht"}
+{"input": "KRIMIJ", "output": "Krimpen aan den IJssel"}
+{"input": "LAGE", "output": "Lage Zwaluwe"}
+{"input": "LISSE", "output": "Lisse"}
+{"input": "MELISS", "output": "Melissant"}
+{"input": "NWBRRN", "output": "Nieuwerbrug"}
+{"input": "OTVOOR", "output": "Oud-Voorburg"}
+{"input": "PAPDRT", "output": "Papendrecht"}
+{"input": "RIDDKK", "output": "Ridderkerk"}
+{"input": "RIJNBG", "output": "Rijnsburg"}
+{"input": "ROCKNJ", "output": "Rockanje"}
+{"input": "SGRAVD", "output": "'s-Gravendeel"}
+{"input": "SLIEDR", "output": "Sliedrecht"}
+{"input": "TILBRG", "output": "Tilburg"}
+{"input": "VOORHT", "output": "Voorhout"}
+{"input": "WERKDM", "output": "Werkendam"}
+{"input": "ZEVHZH", "output": "Zevenhuizen"}
+{"input": "ALBLDM", "output": "Alblasserdam"}
+{"input": "BREDA", "output": "Breda"}
+{"input": "GOES", "output": "Goes"}
+{"input": "HARDGD", "output": "Hardinxveld-Giessendam"}
+{"input": "HEENVL", "output": "Heenvliet"}
+{"input": "KRIMLK", "output": "Krimpen aan de Lek"}
+{"input": "MOLGRF", "output": "Molenaarsgraaf"}
+{"input": "MOORDR", "output": "Moordrecht"}
+{"input": "NWVEEN", "output": "Nieuwveen"}
+{"input": "OUDBLD", "output": "Oud-Beijerland"}
+{"input": "PUTTHK", "output": "Puttershoek"}
+{"input": "RIJPWT", "output": "Rijpwetering"}
+{"input": "ROZNZH", "output": "Rozenburg"}
+{"input": "SASSHM", "output": "Sassenheim"}
+{"input": "WARMND", "output": "Warmond"}
+{"input": "WEERT", "output": "Weert"}
+{"input": "WIJNGD", "output": "Wijngaarden"}
+{"input": "ZLAND", "output": "Zeeland"}
+{"input": "AMEIDE", "output": "Ameide"}
+{"input": "BAVELB", "output": "Bavel"}
+{"input": "BERGZM", "output": "Bergen op Zoom"}
+{"input": "EUROPT", "output": "Europoort"}
+{"input": "GIESBG", "output": "Giessenburg"}
+{"input": "HEERJD", "output": "Heerjansdam"}
+{"input": "HEINND", "output": "Heinenoord"}
+{"input": "LEERDM", "output": "Leerdam"}
+{"input": "LEKKKK", "output": "Lekkerkerk"}
+{"input": "MAASLD", "output": "Maasland"}
+{"input": "MIDDHS", "output": "Middelharnis"}
+{"input": "MOERKP", "output": "Moerkapelle"}
+{"input": "NDWKHT", "output": "Noordwijkerhout"}
+{"input": "NUMAND", "output": "Numansdorp"}
+{"input": "NWKKIJ", "output": "Nieuwerkerk aan den IJssel"}
+{"input": "OUDTNG", "output": "Oude-Tonge"}
+{"input": "RHOON", "output": "Rhoon"}
+{"input": "ROTALB", "output": "Rotterdam-Albrandswaard"}
+{"input": "SOMMDK", "output": "Sommelsdijk"}
+{"input": "STRIJN", "output": "Strijen"}
+{"input": "UTRECH", "output": "Utrecht"}
+{"input": "VALKZH", "output": "Valkenburg"}
+{"input": "ZBEIJL", "output": "Zuid-Beijerland"}
+{"input": "BOTLEK", "output": "Botlek"}
+{"input": "HEKELI", "output": "Hekelingen"}
+{"input": "VREELD", "output": "Vreeland"}
+{"input": "MAASVL", "output": "Maasvlakte"}
+{"input": "HOOGMD", "output": "Hoogmade"}
+{"input": "WOUBRG", "output": "Woubrugge"}
+{"input": "HERKGN", "output": "Herkingen"}
+{"input": "VONDPL", "output": "Vondelingenplaat"}
+{"input": "VIERPL", "output": "Vierpolders"}
