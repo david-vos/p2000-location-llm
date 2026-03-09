@@ -40,6 +40,8 @@ def main():
         system_prompt += "\n\n" + context
 
     train_data = load_jsonl("train.jsonl")
+    if os.path.exists("train_part2.jsonl"):
+        train_data.extend(load_jsonl("train_part2.jsonl"))
     output = []
 
     for entry in train_data:

@@ -9,7 +9,7 @@ import os
 MODEL_NAME = "TinyLlama/TinyLlama-1.1B-intermediate-step-1431k-3T"
 OUTPUT_DIR = "./build/p2000-model-mlx"
 EPOCHS = 10
-BATCH_SIZE = 4
+BATCH_SIZE = 2
 LEARNING_RATE = 2e-4
 LORA_RANK = 8
 

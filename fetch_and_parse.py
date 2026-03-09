@@ -7,7 +7,7 @@ import sys
 import urllib.request
 import ssl
 from datetime import datetime, timedelta, timezone
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 BASE = "https://192.168.1.193:4200/api"
 ctx = ssl.create_default_context()
@@ -44,17 +44,18 @@ NULL_PATTERNS = [
 ]
 
 
-def fetch_json(url):
+def fetch_json(url, timeout=10):
     req = urllib.request.Request(url)
-    with urllib.request.urlopen(req, context=ctx) as resp:
+    with urllib.request.urlopen(req, context=ctx, timeout=timeout) as resp:
         return json.loads(resp.read())
 
 
 def fetch_raw(msg_id):
     try:
-        data = fetch_json(f"{BASE}/pages/{msg_id}")
+        data = fetch_json(f"{BASE}/pages/{msg_id}", timeout=10)
         return msg_id, data.get("raw_message", "")
     except Exception as e:
+        print(f"  Error fetching {msg_id}: {e}", flush=True)
         return msg_id, None
 
 
@@ -286,48 +287,65 @@ def parse_message(raw):
 
 def main():
     now = datetime.now(timezone.utc)
-    date_from = (now - timedelta(hours=10)).strftime('%Y-%m-%dT%H:%M:%S.000Z')
+    date_from = (now - timedelta(hours=20)).strftime('%Y-%m-%dT%H:%M:%S.000Z')
     date_to = now.strftime('%Y-%m-%dT%H:%M:%S.000Z')
 
-    print(f"Fetching messages from {date_from} to {date_to}...")
+    print(f"Fetching messages from {date_from} to {date_to}...", flush=True)
 
     # Fetch message list
+    print("Fetching page 1...", flush=True)
     data = fetch_json(f"{BASE}/pages?page=1&size=999&date_from={date_from}&date_to={date_to}")
     total = data["total"]
+    total_pages = data.get("total_pages", (total + 998) // 999)
     ids = [m["id"] for m in data["content"]]
+    print(f"Page 1: {len(ids)} ids, total={total}, pages={total_pages}", flush=True)
 
-    # Fetch more pages if needed
-    page = 2
-    while len(ids) < total:
+    # Fetch more pages if needed (max 10 pages)
+    max_pages = min(total_pages, 10)
+    for page in range(2, max_pages + 1):
+        print(f"Fetching page {page}/{total_pages}...", flush=True)
         data = fetch_json(f"{BASE}/pages?page={page}&size=999&date_from={date_from}&date_to={date_to}")
-        if not data["content"]:
+        batch = data.get("content", [])
+        if not batch:
             break
-        ids.extend(m["id"] for m in data["content"])
-        page += 1
+        ids.extend(m["id"] for m in batch)
+        print(f"  Got {len(batch)}, total ids so far: {len(ids)}", flush=True)
 
-    print(f"Found {len(ids)} messages (total: {total})")
+    print(f"Found {len(ids)} messages (total: {total})", flush=True)
 
     # Load existing inputs for dedup
     existing = set()
-    with open("train.jsonl") as f:
-        for line in f:
-            line = line.strip()
-            if line:
-                d = json.loads(line)
-                existing.add(d["input"])
+    for fname in ["train.jsonl", "train_part2.jsonl"]:
+        try:
+            with open(fname) as f:
+                for line in f:
+                    line = line.strip()
+                    if line:
+                        d = json.loads(line)
+                        existing.add(d["input"])
+        except FileNotFoundError:
+            pass
 
     print(f"Existing training entries: {len(existing)}")
 
     # Fetch raw messages in parallel
-    print("Fetching raw messages...")
+    print(f"Fetching {len(ids)} raw messages (20 workers)...", flush=True)
     raw_messages = {}
+    done = 0
+    errors = 0
     with ThreadPoolExecutor(max_workers=20) as executor:
-        results = list(executor.map(lambda id: fetch_raw(id), ids))
-    for msg_id, raw in results:
-        if raw:
-            raw_messages[msg_id] = raw
+        futures = {executor.submit(fetch_raw, mid): mid for mid in ids}
+        for future in as_completed(futures):
+            done += 1
+            msg_id, raw = future.result()
+            if raw:
+                raw_messages[msg_id] = raw
+            else:
+                errors += 1
+            if done % 500 == 0 or done == len(ids):
+                print(f"  Progress: {done}/{len(ids)} fetched, {len(raw_messages)} ok, {errors} errors", flush=True)
 
-    print(f"Got {len(raw_messages)} raw messages")
+    print(f"Got {len(raw_messages)} raw messages ({errors} errors)", flush=True)
 
     # Parse and collect
     new_entries = []
@@ -356,7 +374,7 @@ def main():
         existing.add(raw)
 
     # Write new entries
-    with open("train.jsonl", "a") as f:
+    with open("train_part2.jsonl", "a") as f:
         for entry in new_entries:
             f.write(json.dumps(entry, ensure_ascii=False) + "\n")
 

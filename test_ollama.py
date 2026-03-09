@@ -5,7 +5,7 @@ import json
 import subprocess
 import sys
 
-MODELS = ["p2000v2"]
+MODELS = ["p2000v9"]
 
 TESTS = [
     {
@@ -78,11 +78,11 @@ TESTS = [
     },
     {
         "input": "BON-02 Ongeval wegvervoer Noordelijke Esweg Weijinksweg Hengelo 059096 059333",
-        "expected": {"Straatnaam": "Noordelijke Esweg", "PlaatsNaam": "Hengelo", "wegnummer": None, "postcode": None, "Regio": None},
+        "expected": {"Straatnaam": "Noordelijke Esweg Weijinksweg", "PlaatsNaam": "Hengelo", "wegnummer": None, "postcode": None, "Regio": None},
     },
     {
         "input": "Aanrijding letsel Noordelijke Esweg Weijinksweg Hengelo 156507",
-        "expected": {"Straatnaam": "Noordelijke Esweg", "PlaatsNaam": "Hengelo", "wegnummer": None, "postcode": None, "Regio": None},
+        "expected": {"Straatnaam": "Noordelijke Esweg Weijinksweg", "PlaatsNaam": "Hengelo", "wegnummer": None, "postcode": None, "Regio": None},
     },
     {
         "input": "Obrechtlaan SGRAVZ : 15123",
