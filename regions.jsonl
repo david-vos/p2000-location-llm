@@ -7,7 +7,9 @@
 {"input":"Flevoland","output":"Flevoland"}
 {"input":"Friesland","output":"Friesland"}
 {"input":"Gelderland Midden","output":"Gelderland Midden"}
+{"input":"Gelderland-Midden","output":"Gelderland Midden"}
 {"input":"Gelderland Zuid","output":"Gelderland Zuid"}
+{"input":"Gelderland-Zuid","output":"Gelderland Zuid"}
 {"input":"Gooi en Vechtstreek","output":"Gooi en Vechtstreek"}
 {"input":"Groningen","output":"Groningen"}
 {"input":"Haaglanden","output":"Haaglanden"}
@@ -22,7 +24,6 @@
 {"input":"Midden- en West-Brabant","output":"Midden- en West-Brabant"}
 {"input":"Noord- en Oost-Gelderland","output":"Noord- en Oost-Gelderland"}
 {"input":"Noord-Holland Noord","output":"Noord-Holland Noord"}
-{"input":"Renswoude","output":"Renswoude"}
 {"input":"Rotterdam-Rijnmond","output":"Rotterdam-Rijnmond"}
 {"input":"Twente","output":"Twente"}
 {"input":"Utrecht","output":"Utrecht"}

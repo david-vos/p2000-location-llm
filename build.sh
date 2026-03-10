@@ -16,6 +16,9 @@ OLLAMA_NAME="${BASE_NAME}v${NEXT_VERSION}"
 echo "==> Cleaning build directory..."
 rm -rf build
 
+echo "==> Fixing training data (Regio from PlaatsNaam, etc.)..."
+python3 fix_training_data.py
+
 echo "==> Preparing training data..."
 python3 prepare_data.py
 

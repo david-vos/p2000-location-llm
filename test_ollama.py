@@ -5,12 +5,12 @@ import json
 import subprocess
 import sys
 
-MODELS = ["p2000v9"]
+MODELS = ["p2000v12"]
 
 TESTS = [
     {
         "input": "BDH-02 Stank/hind. lucht Roland Holstlaan Delft 155530",
-        "expected": {"Straatnaam": "Roland Holstlaan", "PlaatsNaam": "Delft", "wegnummer": None, "postcode": None, "Regio": None},
+        "expected": {"Straatnaam": "Roland Holstlaan", "PlaatsNaam": "Delft", "wegnummer": None, "postcode": None, "Regio": "Haaglanden"},
     },
     {
         "input": "TESTOPROEP MOB",
@@ -30,7 +30,7 @@ TESTS = [
     },
     {
         "input": "BAD-03 Stank/hind. lucht (gaslucht) (binnen) Langswater Amsterdam 132531",
-        "expected": {"Straatnaam": "Langswater", "PlaatsNaam": "Amsterdam", "wegnummer": None, "postcode": None, "Regio": None},
+        "expected": {"Straatnaam": "Langswater", "PlaatsNaam": "Amsterdam", "wegnummer": None, "postcode": None, "Regio": "Amsterdam-Amstelland"},
     },
     {
         "input": "A1 AMBU 17102 Westeinde 2512GR Den Haag SGRAVH bon 32110",
@@ -50,7 +50,7 @@ TESTS = [
     },
     {
         "input": "12148 Rit 33527 Houtmarkt Haarlem",
-        "expected": {"Straatnaam": "Houtmarkt", "PlaatsNaam": "Haarlem", "wegnummer": None, "postcode": None, "Regio": None},
+        "expected": {"Straatnaam": "Houtmarkt", "PlaatsNaam": "Haarlem", "wegnummer": None, "postcode": None, "Regio": "Kennemerland"},
     },
     {
         "input": "Eindhoven Rit: 27989",
@@ -74,18 +74,18 @@ TESTS = [
     },
     {
         "input": "BRT-01 Wateroverlast (flat) Winston Churchilllaan Spijkenisse 179237",
-        "expected": {"Straatnaam": "Winston Churchilllaan", "PlaatsNaam": "Spijkenisse", "wegnummer": None, "postcode": None, "Regio": None},
+        "expected": {"Straatnaam": "Winston Churchilllaan", "PlaatsNaam": "Spijkenisse", "wegnummer": None, "postcode": None, "Regio": "Rotterdam-Rijnmond"},
     },
     {
         "input": "BON-02 Ongeval wegvervoer Noordelijke Esweg Weijinksweg Hengelo 059096 059333",
-        "expected": {"Straatnaam": "Noordelijke Esweg Weijinksweg", "PlaatsNaam": "Hengelo", "wegnummer": None, "postcode": None, "Regio": None},
+        "expected": {"Straatnaam": "Noordelijke Esweg", "PlaatsNaam": "Hengelo", "wegnummer": None, "postcode": None, "Regio": "Twente"},
     },
     {
         "input": "Aanrijding letsel Noordelijke Esweg Weijinksweg Hengelo 156507",
-        "expected": {"Straatnaam": "Noordelijke Esweg Weijinksweg", "PlaatsNaam": "Hengelo", "wegnummer": None, "postcode": None, "Regio": None},
+        "expected": {"Straatnaam": "Noordelijke Esweg", "PlaatsNaam": "Hengelo", "wegnummer": None, "postcode": None, "Regio": "Twente"},
     },
     {
-        "input": "Obrechtlaan SGRAVZ : 15123",
+        "input": "Obrechtlaan SGRAVH : 15123",
         "expected": {"Straatnaam": "Obrechtlaan", "PlaatsNaam": "Den Haag", "wegnummer": None, "postcode": None, "Regio": "Haaglanden"},
     },
     {

@@ -221,6 +221,11 @@ CITY_TO_VEILIGHEIDSREGIO = {
     "Beinsdorp": "Hollands Midden",
     "Sassenheim": "Hollands Midden",
     "Vreeland": "Hollands Midden",
+    # Amsterdam-Amstelland
+    "Amsterdam": "Amsterdam-Amstelland",
+    "Amstelveen": "Amsterdam-Amstelland",
+    "Diemen": "Amsterdam-Amstelland",
+    "Ouderkerk aan de Amstel": "Amsterdam-Amstelland",
     # Kennemerland
     "Haarlem": "Kennemerland",
     "Heemskerk": "Kennemerland",
@@ -229,6 +234,11 @@ CITY_TO_VEILIGHEIDSREGIO = {
     "Bloemendaal": "Kennemerland",
     "Zandvoort": "Kennemerland",
     "Overveen": "Kennemerland",
+    # Twente (Hengelo Overijssel - Hengelo Gld uses Gelderland Midden explicitly)
+    "Hengelo": "Twente",
+    "Enschede": "Twente",
+    "Oldenzaal": "Twente",
+    "Almelo": "Twente",
     # Coördinatiecentrum Rotterdam-Land
     "Coördinatiecentrum Rotterdam-Land": "Coördinatiecentrum Rotterdam-Land",
 }
@@ -874,6 +884,29 @@ def fix_entry(lineno, entry):
         if new_straat != straat:
             out["Straatnaam"] = new_straat if new_straat else None
             changed = True
+
+    # --- Fix 33b: Strip parenthetical fragments from start of Straatnaam (e.g. "openen) Sluitersveldssingel") ---
+    straat = out.get("Straatnaam")
+    if straat and re.match(r'^[a-z]+\)\s+', straat):
+        new_straat = re.sub(r'^[a-z]+\)\s+', '', straat).strip()
+        if new_straat:
+            out["Straatnaam"] = new_straat
+            changed = True
+
+    # --- Fix 33c: Fix "Geneeskunde Charlotte Jacobsla/aa/an" -> "Charlotte Jacobslaan" (department prefix + truncated street) ---
+    straat = out.get("Straatnaam")
+    if straat and "Charlotte Jacobsla" in straat and "Geneeskunde" in straat:
+        out["Straatnaam"] = "Charlotte Jacobslaan"
+        changed = True
+
+    # --- Fix 34: Fill Regio from PlaatsNaam when null (fix conflicting patterns) ---
+    # When we have a known city but Regio is null, infer it from city->region mapping.
+    # This fixes inconsistency where e.g. Rotterdam sometimes had Regio null, sometimes Rotterdam-Rijnmond.
+    plaats = out.get("PlaatsNaam")
+    regio = out.get("Regio")
+    if plaats and not regio and plaats in CITY_TO_VEILIGHEIDSREGIO:
+        out["Regio"] = CITY_TO_VEILIGHEIDSREGIO[plaats]
+        changed = True
 
     return entry, changed
 

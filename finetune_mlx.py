@@ -1,51 +1,46 @@
 #!/usr/bin/env python3
-"""Fine-tune using MLX on Apple Silicon. Faster than PyTorch on M-series chips."""
+"""Fine-tune Qwen 2.5 using MLX on Apple Silicon."""
 
 import json
 import subprocess
 import sys
 import os
 
-MODEL_NAME = "TinyLlama/TinyLlama-1.1B-intermediate-step-1431k-3T"
+MODEL_NAME = "Qwen/Qwen2.5-1.5B-Instruct"
 OUTPUT_DIR = "./build/p2000-model-mlx"
-EPOCHS = 10
+EPOCHS = 4
 BATCH_SIZE = 2
-LEARNING_RATE = 2e-4
-LORA_RANK = 8
+LEARNING_RATE = 1e-4
+LORA_RANK = 16
+WARMUP_STEPS = 200
 
 def check_deps():
     try:
         import mlx
         import mlx_lm
+        from transformers import AutoTokenizer
     except ImportError:
         print("Installing MLX dependencies...")
-        subprocess.check_call([sys.executable, "-m", "pip", "install", "mlx", "mlx-lm"])
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "mlx", "mlx-lm", "transformers"])
 
-def format_messages_as_text(messages):
-    """Format chat messages as plain text for base models without a chat template."""
-    parts = []
-    for msg in messages:
-        role = msg["role"]
-        content = msg["content"]
-        if role == "system":
-            parts.append(f"### System:\n{content}")
-        elif role == "user":
-            parts.append(f"### User:\n{content}")
-        elif role == "assistant":
-            parts.append(f"### Assistant:\n{content}")
-    return "\n\n".join(parts)
 
-def prepare_mlx_data():
-    """Convert train_chat.jsonl to MLX-compatible format (train/valid split)."""
+def prepare_mlx_data(model_name):
+    """Convert train_chat.jsonl to MLX-compatible format using Qwen chat template."""
+    from transformers import AutoTokenizer
+
     os.makedirs("build/mlx-data", exist_ok=True)
+    tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
 
     with open("build/train_chat.jsonl") as f:
         examples = [json.loads(line) for line in f if line.strip()]
 
-    # Convert chat messages to plain text completions
     text_examples = []
     for ex in examples:
-        text = format_messages_as_text(ex["messages"])
+        text = tokenizer.apply_chat_template(
+            ex["messages"],
+            tokenize=False,
+            add_generation_prompt=False,
+        )
         text_examples.append({"text": text})
 
     # 90/10 train/valid split
@@ -63,6 +58,7 @@ def prepare_mlx_data():
                 f.write(json.dumps(item, ensure_ascii=False) + "\n")
 
     print(f"MLX data: {len(train)} train, {len(valid)} valid examples")
+    return len(train)
 
 def main():
     import argparse
@@ -77,20 +73,41 @@ def main():
         print("Run prepare_data.py first!")
         sys.exit(1)
 
-    prepare_mlx_data()
+    train_count = prepare_mlx_data(model_name)
+    steps_per_epoch = max(1, train_count // BATCH_SIZE)
+    total_iters = EPOCHS * steps_per_epoch
+    print(f"Training: {EPOCHS} epochs, {steps_per_epoch} steps/epoch, {total_iters} total iters")
+    print(f"LR warmup: {WARMUP_STEPS} steps")
+
+    # Create config with LR schedule (warmup + cosine decay)
+    decay_steps = max(1, total_iters - WARMUP_STEPS)
+    config = {
+        "model": model_name,
+        "train": True,
+        "data": "./build/mlx-data",
+        "batch_size": BATCH_SIZE,
+        "iters": total_iters,
+        "num_layers": LORA_RANK,
+        "adapter_path": OUTPUT_DIR,
+        "max_seq_length": 4096,
+        "grad_checkpoint": True,
+        "lora_parameters": {"rank": LORA_RANK, "dropout": 0.0, "scale": 20.0},
+        "lr_schedule": {
+            "name": "cosine_decay",
+            "arguments": [LEARNING_RATE, decay_steps, 1e-6],
+            "warmup": WARMUP_STEPS,
+            "warmup_init": 0.0,
+        },
+    }
+    config_path = "./build/mlx-train-config.yaml"
+    os.makedirs("build", exist_ok=True)
+    import yaml
+    with open(config_path, "w") as f:
+        yaml.dump(config, f, default_flow_style=False, sort_keys=False)
 
     cmd = [
         sys.executable, "-m", "mlx_lm", "lora",
-        "--model", model_name,
-        "--data", "./build/mlx-data",
-        "--train",
-        "--batch-size", str(BATCH_SIZE),
-        "--num-layers", str(LORA_RANK),
-        "--iters", str(EPOCHS * 100),
-        "--learning-rate", str(LEARNING_RATE),
-        "--adapter-path", OUTPUT_DIR,
-        "--grad-checkpoint",
-        "--max-seq-length", "3000",
+        "-c", config_path,
     ]
 
     print(f"Fine-tuning {model_name} with MLX...")

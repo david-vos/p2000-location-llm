@@ -10,6 +10,9 @@ MODEL_NAME = "Qwen/Qwen2.5-1.5B-Instruct"
 LORA_DIR = "./build/p2000-model"
 MLX_FUSED_DIR = "./build/p2000-model-mlx-fused"
 MERGED_DIR = "./build/p2000-model-merged"
+
+# Prefer MLX fused output (finetune_mlx.py writes here)
+PREFERRED_SOURCE = MLX_FUSED_DIR
 GGUF_DIR = "./build/p2000-gguf"
 GGUF_FILE = os.path.join(GGUF_DIR, "p2000-model.gguf")
 QUANTIZATION = "q8_0"
@@ -36,8 +39,8 @@ def merge_lora():
     tokenizer.save_pretrained(MERGED_DIR)
     print(f"Merged model saved to {MERGED_DIR}")
 
-def convert_to_gguf():
-    """Convert merged model to GGUF using llama.cpp."""
+def convert_to_gguf(hf_source: str):
+    """Convert HuggingFace/MLX model to GGUF using llama.cpp."""
     os.makedirs(GGUF_DIR, exist_ok=True)
 
     # Check if llama.cpp convert script is available
@@ -67,13 +70,13 @@ def convert_to_gguf():
             print("  cd llama.cpp && pip install -r requirements.txt")
             sys.exit(1)
 
-    # Convert HF to GGUF
+    # Convert HF/MLX to GGUF (MLX fused format is HF-compatible)
     raw_gguf = os.path.join(GGUF_DIR, "p2000-model-f16.gguf")
-    print(f"Converting to GGUF ({QUANTIZATION})...")
+    print(f"Converting {hf_source} to GGUF ({QUANTIZATION})...")
 
     subprocess.check_call([
         sys.executable, convert_script,
-        MERGED_DIR,
+        hf_source,
         "--outfile", raw_gguf,
         "--outtype", "f16",
     ])
@@ -141,19 +144,22 @@ PARAMETER num_ctx 3000
     print('  ollama run p2000 "AMBU 17143 2e Opbouwstraat 3076PS Rotterdam ROTTDM bon 33240"')
 
 def main():
-    # Support MLX fused model (already merged, skip LoRA merge step)
-    if os.path.exists(MLX_FUSED_DIR):
-        print(f"Found MLX fused model at {MLX_FUSED_DIR}")
-        if not os.path.exists(MERGED_DIR):
-            shutil.copytree(MLX_FUSED_DIR, MERGED_DIR)
-            print(f"Copied to {MERGED_DIR}")
-    elif not os.path.exists(LORA_DIR) and not os.path.exists(MERGED_DIR):
-        print("No fine-tuned model found. Run finetune.py or finetune_mlx.py first!")
-        sys.exit(1)
-    else:
+    # Prefer MLX fused model (finetune_mlx.py output), then HF merged, then merge from LoRA
+    hf_source = None
+    if os.path.exists(PREFERRED_SOURCE):
+        hf_source = os.path.abspath(PREFERRED_SOURCE)
+        print(f"Using MLX fused model at {hf_source}")
+    elif os.path.exists(MERGED_DIR):
+        hf_source = os.path.abspath(MERGED_DIR)
+        print(f"Using merged model at {hf_source}")
+    elif os.path.exists(LORA_DIR):
         merge_lora()
+        hf_source = os.path.abspath(MERGED_DIR)
+    else:
+        print("No fine-tuned model found. Run finetune_mlx.py first!")
+        sys.exit(1)
 
-    convert_to_gguf()
+    convert_to_gguf(hf_source)
     create_modelfile()
 
 if __name__ == "__main__":
