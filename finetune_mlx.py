@@ -8,10 +8,10 @@ import os
 
 MODEL_NAME = "Qwen/Qwen2.5-1.5B-Instruct"
 OUTPUT_DIR = "./build/p2000-model-mlx"
-EPOCHS = 4
-BATCH_SIZE = 2
+EPOCHS = 10
+BATCH_SIZE = 5
 LEARNING_RATE = 1e-4
-LORA_RANK = 16
+LORA_RANK = 8
 WARMUP_STEPS = 200
 
 def check_deps():
@@ -89,7 +89,7 @@ def main():
         "iters": total_iters,
         "num_layers": LORA_RANK,
         "adapter_path": OUTPUT_DIR,
-        "max_seq_length": 4096,
+        "max_seq_length": 1024,
         "grad_checkpoint": True,
         "lora_parameters": {"rank": LORA_RANK, "dropout": 0.0, "scale": 20.0},
         "lr_schedule": {

@@ -14,25 +14,44 @@ def load_jsonl(path):
                 entries.append(json.loads(line))
     return entries
 
-def build_context():
-    """Build extra context from abbreviations and regions files."""
-    parts = []
-
+def generate_abbreviation_examples():
+    """Generate training examples for abbreviations not covered in training data."""
     try:
-        abbrevs = load_jsonl("abbreviations.jsonl")
-        mapping = ", ".join(f'{a["input"]}={a["output"]}' for a in abbrevs)
-        parts.append(f"Plaatsnaam-afkortingen: {mapping}")
+        abbrevs = {a["input"]: a["output"] for a in load_jsonl("abbreviations.jsonl")}
     except FileNotFoundError:
-        pass
+        return []
 
-    try:
-        regions = load_jsonl("regions.jsonl")
-        mapping = ", ".join(f'{r["input"]}={r["output"]}' for r in regions)
-        parts.append(f"Regio's: {mapping}")
-    except FileNotFoundError:
-        pass
+    # Synthetic examples for each abbreviation to ensure coverage
+    templates = [
+        ("AMBU 17100 Hoofdstraat 1234AB {abbr} bon 30000", lambda out: {"Straatnaam": "Hoofdstraat", "PlaatsNaam": out, "wegnummer": None, "postcode": "1234AB", "Regio": None}),
+        ("P 1 BRW-01 Brand Kerkweg {abbr} 100000", lambda out: {"Straatnaam": "Kerkweg", "PlaatsNaam": out, "wegnummer": None, "postcode": None, "Regio": None}),
+        ("A1 AMBU 17200 Dorpsstraat {abbr} bon 40000", lambda out: {"Straatnaam": "Dorpsstraat", "PlaatsNaam": out, "wegnummer": None, "postcode": None, "Regio": None}),
+    ]
 
-    return "\n".join(parts)
+    # Check which abbreviations are already covered in training data
+    covered = set()
+    for path in ["train.jsonl", "train_part2.jsonl", "train_edge_cases.jsonl"]:
+        if os.path.exists(path):
+            for entry in load_jsonl(path):
+                for abbr in abbrevs:
+                    if abbr in entry["input"]:
+                        covered.add(abbr)
+
+    missing = set(abbrevs.keys()) - covered
+    if not missing:
+        return []
+
+    examples = []
+    for abbr in missing:
+        out = abbrevs[abbr]
+        for template_input, template_output in templates:
+            examples.append({
+                "input": template_input.format(abbr=abbr),
+                "output": template_output(out),
+            })
+
+    print(f"Generated {len(examples)} synthetic examples for {len(missing)} uncovered abbreviations: {', '.join(sorted(missing))}")
+    return examples
 
 def augment_entries(entries):
     """Add synthetic variations for key patterns. Returns expanded list."""
@@ -65,9 +84,6 @@ def augment_entries(entries):
 def main():
     random.seed(42)
     system_prompt = open("system_prompt.txt").read().strip()
-    context = build_context()
-    if context:
-        system_prompt += "\n\n" + context
 
     train_data = load_jsonl("train.jsonl")
     if os.path.exists("train_part2.jsonl"):
@@ -77,6 +93,9 @@ def main():
     if os.path.exists("train_edge_cases.jsonl"):
         edge_cases = load_jsonl("train_edge_cases.jsonl")
         train_data.extend(edge_cases * 4)  # 4x oversampling for minority patterns
+
+    # Generate synthetic examples for uncovered abbreviations
+    train_data.extend(generate_abbreviation_examples())
 
     # Data augmentation: add synthetic variations for key patterns
     train_data = augment_entries(train_data)

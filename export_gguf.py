@@ -97,19 +97,6 @@ def create_modelfile():
     """Create Ollama Modelfile."""
     system_prompt = open("system_prompt.txt").read().strip()
 
-    # Add abbreviation context
-    try:
-        import json
-        abbrevs = []
-        with open("abbreviations.jsonl") as f:
-            for line in f:
-                if line.strip():
-                    a = json.loads(line)
-                    abbrevs.append(f'{a["input"]}={a["output"]}')
-        system_prompt += f"\n\nPlaatsnaam-afkortingen: {', '.join(abbrevs)}"
-    except FileNotFoundError:
-        pass
-
     modelfile = f"""FROM ./p2000-model.gguf
 
 TEMPLATE \"\"\"{{{{- if .System }}}}<|im_start|>system
