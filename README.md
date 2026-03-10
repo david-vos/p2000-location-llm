@@ -52,6 +52,17 @@ python finetune.py --cpu      # Force CPU (slow, ~2-4 hours)
 python finetune_mlx.py
 ```
 
+### If training was cut short
+
+If you stopped training early (Ctrl+C) but want to use the last saved checkpoint:
+
+```bash
+# Fuse the adapter into the base model
+python3 -m mlx_lm.fuse --model Qwen/Qwen2.5-1.5B-Instruct --adapter-path build/p2000-model-mlx --save-path build/p2000-model-mlx-fused
+
+# Then continue with Step 4 below
+```
+
 ## Step 4: Convert to GGUF for Ollama / LM Studio
 
 ```bash
