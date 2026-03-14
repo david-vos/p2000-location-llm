@@ -5,7 +5,7 @@ import json
 import subprocess
 import sys
 
-MODELS = ["p2000v12"]
+MODELS = ["p2000v13"]
 
 TESTS = [
     {
